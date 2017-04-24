@@ -1,0 +1,4 @@
+name: DOHA-Blocker
+main: guichaguri.dohablocker.bukkit.BlockerBukkit
+version: 1.0.0
+author: Guichaguri
