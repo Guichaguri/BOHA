@@ -15,16 +15,11 @@ import java.util.UUID;
  */
 public class BlockerManager {
 
-    public static final String VERSION = "1.0.0";
-
-    private static final String DEFAULT_MSG = "§cYou can't login using a hacked account.";
-    private static final String URL_BASE = "https://doha.blueslime.fr/api/check/";
-
-    public static String MESSAGE = DEFAULT_MSG;
+    public static String MESSAGE = Blocker.DEFAULT_MSG;
 
     private static JsonObject createConfig(File configFile) {
         JsonObject config = Json.object();
-        config.add("message", DEFAULT_MSG);
+        config.add("message", Blocker.DEFAULT_MSG);
         try {
             if(!configFile.exists()) {
                 configFile.getParentFile().mkdirs();
@@ -45,11 +40,11 @@ public class BlockerManager {
             config = createConfig(configFile);
         }
 
-        MESSAGE = config.getString("message", DEFAULT_MSG);
+        MESSAGE = config.getString("message", Blocker.DEFAULT_MSG);
     }
 
     private static boolean check(UUID uuid) throws IOException {
-        URL url = new URL(URL_BASE + uuid.toString());
+        URL url = Blocker.getUrl(uuid);
 
         InputStreamReader reader = new InputStreamReader(url.openStream());
         JsonObject data = Json.parse(reader).asObject();

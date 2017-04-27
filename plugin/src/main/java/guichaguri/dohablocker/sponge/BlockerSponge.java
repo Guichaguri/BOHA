@@ -1,6 +1,7 @@
 package guichaguri.dohablocker.sponge;
 
 import com.google.inject.Inject;
+import guichaguri.dohablocker.Blocker;
 import guichaguri.dohablocker.BlockerManager;
 import java.io.File;
 import org.spongepowered.api.config.ConfigDir;
@@ -14,10 +15,11 @@ import org.spongepowered.api.text.Text;
  * @author Guilherme Chaguri
  */
 @Plugin(
-        id = "doha-blocker",
+        id = "doha-blocker-sponge",
         name = "DOHA-Blocker",
-        version = BlockerManager.VERSION,
-        authors = "Guichaguri"
+        version = Blocker.VERSION,
+        authors = "Guichaguri",
+        description = "Blocks connections from hacked accounts"
 )
 public class BlockerSponge {
 

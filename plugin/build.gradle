@@ -1,0 +1,60 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+
+group 'guichaguri.doha-blocker'
+version '1.0.0'
+
+sourceCompatibility = targetCompatibility = "1.6"
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.6"
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'sponge'
+        url = 'http://repo.spongepowered.org/maven'
+    }
+    maven {
+        name = 'spigot'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'bungeecord'
+        url = 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+
+dependencies {
+    // Common
+    compile project(':common')
+
+    // Sponge
+    compile 'org.spongepowered:spongeapi:5.1.0'
+
+    // Bukkit
+    compile 'org.bukkit:bukkit:1.11.2-R0.1-SNAPSHOT'
+
+    // BungeeCord
+    compile 'net.md-5:bungeecord-api:1.10-SNAPSHOT'
+
+    // Json
+    compile 'com.eclipsesource.minimal-json:minimal-json:0.9.4'
+}
+
+shadowJar {
+    dependencies {
+        include dependency('com.eclipsesource.minimal-json:minimal-json:0.9.4')
+    }
+
+    relocate 'com.eclipsesource.json', 'guichaguri.dohablocker.json'
+}
