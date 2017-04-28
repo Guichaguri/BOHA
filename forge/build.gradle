@@ -10,7 +10,7 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0.1"
+version = ver
 group = "guichaguri.doha-blocker"
 archivesBaseName = "DOHA-Blocker-Forge"
 
@@ -23,19 +23,36 @@ minecraft {
     version = "1.11.2-13.20.0.2282"
     runDir = "run"
     mappings = "snapshot_20161220"
+    makeObfSourceJar = false
+
+    project.version = project.minecraft.version + "-" + ver;
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
 }
 
 dependencies {
-    compile project(':common')
+    shade project(':common')
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property "version", ver
     inputs.property "mcversion", project.minecraft.version
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': ver,
+               'mcversion': project.minecraft.version
     }
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'

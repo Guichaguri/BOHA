@@ -1,17 +1,25 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
+    dependencies {
+        classpath 'org.yaml:snakeyaml:1.12'
+    }
 }
+
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.DumperOptions
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 
 group 'guichaguri.doha-blocker'
-version '1.0.0'
+version ver
 
 sourceCompatibility = targetCompatibility = "1.6"
 compileJava {
@@ -51,8 +59,30 @@ dependencies {
     compile 'com.eclipsesource.minimal-json:minimal-json:0.9.4'
 }
 
+def processYaml(yaml, file) {
+    println("Updating version from " + file.name)
+
+    def data = (Map)yaml.load(file.text)
+    data.put("version", ver);
+    file.text = yaml.dump(data)
+}
+
+processResources {
+    def options = new DumperOptions();
+    options.prettyFlow = true;
+    options.defaultFlowStyle = FlowStyle.BLOCK
+    def yaml = new Yaml(options)
+
+    processYaml(yaml, new File("./src/main/resources/plugin.yml"))
+    processYaml(yaml, new File("./src/main/resources/bungee.yml"))
+}
+
 shadowJar {
+    baseName = 'DOHA-Blocker-Plugin'
+    classifier = null
+
     dependencies {
+        include project(':common')
         include dependency('com.eclipsesource.minimal-json:minimal-json:0.9.4')
     }
 

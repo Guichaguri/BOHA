@@ -2,9 +2,11 @@
 .idea/
 build/
 gradle/
+other/
 out/
 run/
 *.iml
 *.ipr
 *.iws
 gradlew*
+gradle.properties

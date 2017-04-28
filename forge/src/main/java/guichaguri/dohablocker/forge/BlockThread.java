@@ -17,7 +17,9 @@ public class BlockThread extends Thread {
     @Override
     public void run() {
         if(BlockerManager.isBlocked(player.getGameProfile().getId())) {
-            player.connection.disconnect(BlockerManager.MESSAGE);
+            if(player.connection != null) {
+                player.connection.disconnect(BlockerManager.MESSAGE);
+            }
         }
     }
 }

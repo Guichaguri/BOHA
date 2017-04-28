@@ -15,7 +15,7 @@ import org.spongepowered.api.text.Text;
  * @author Guilherme Chaguri
  */
 @Plugin(
-        id = "doha-blocker-sponge",
+        id = "doha-blocker",
         name = "DOHA-Blocker",
         version = Blocker.VERSION,
         authors = "Guichaguri",

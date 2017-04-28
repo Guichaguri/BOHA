@@ -1,2 +1,3 @@
 group 'guichaguri.doha-blocker'
-version '1.0.0'
+
+ext.ver = '1.0.1';
