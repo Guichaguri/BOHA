@@ -9,7 +9,7 @@ Downloads can be found in the [Releases](https://github.com/Guichaguri/DOHA-Bloc
 Note: If you're using SpongeForge, please, use the plugin instead of the mod. It's safer and not version-dependent.
 
 ## Installation
-### Sponge/BungeeCord
+### Bukkit/BungeeCord
 Drop the plugin in the `plugins` folder
 ### Forge/LiteLoader/Sponge
 Drop the mod/plugin in the `mods` folder.
