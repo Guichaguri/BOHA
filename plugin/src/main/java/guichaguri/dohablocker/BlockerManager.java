@@ -49,10 +49,14 @@ public class BlockerManager {
         InputStreamReader reader = new InputStreamReader(url.openStream());
         JsonObject data = Json.parse(reader).asObject();
 
-        return data.getBoolean("exists", false);
+        boolean blocked = data.getBoolean("exists", false);
+        if(blocked) Blocker.addToCache(uuid);
+        return blocked;
     }
 
     public static boolean isBlocked(UUID uuid) {
+        if(Blocker.isBlockedCache(uuid)) return true;
+
         try {
             return check(uuid);
         } catch(Exception ex) {

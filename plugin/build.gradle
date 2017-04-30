@@ -73,8 +73,8 @@ processResources {
     options.defaultFlowStyle = FlowStyle.BLOCK
     def yaml = new Yaml(options)
 
-    processYaml(yaml, new File("./src/main/resources/plugin.yml"))
-    processYaml(yaml, new File("./src/main/resources/bungee.yml"))
+    processYaml(yaml, file("src/main/resources/plugin.yml"))
+    processYaml(yaml, file("src/main/resources/bungee.yml"))
 }
 
 shadowJar {
