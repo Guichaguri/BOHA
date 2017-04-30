@@ -8,11 +8,11 @@ buildscript {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle.tweaker-server'
 
 version = ver
 group = "guichaguri.doha-blocker"
-archivesBaseName = "DOHA-Blocker-Forge"
+archivesBaseName = "DOHA-Blocker-Mod"
 
 sourceCompatibility = targetCompatibility = "1.6"
 compileJava {
@@ -20,8 +20,9 @@ compileJava {
 }
 
 minecraft {
-    version = "1.11.2-13.20.0.2282"
+    version = "1.11.2"
     runDir = "run"
+    tweakClass = "guichaguri.dohablocker.tweak.BlockerTweak"
     mappings = "snapshot_20161220"
     makeObfSourceJar = false
 
@@ -43,18 +44,12 @@ jar {
             exclude 'META-INF', 'META-INF/**'
         }
     }
-}
-
-processResources {
-    inputs.property "version", ver
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version': ver,
-               'mcversion': project.minecraft.version
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+    manifest {
+        attributes  'TweakClass': project.minecraft.tweakClass,
+                    'TweakOrder': '1500',
+                    'TweakName': 'DOHA-Blocker',
+                    'TweakAuthor': 'Guichaguri',
+                    'TweakVersion': ver
     }
 }
+
