@@ -2,6 +2,7 @@ package guichaguri.dohablocker;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.WriterConfig;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,17 +16,19 @@ import java.util.UUID;
  */
 public class BlockerManager {
 
-    public static String MESSAGE = Blocker.DEFAULT_MSG;
-
     private static JsonObject createConfig(File configFile) {
         JsonObject config = Json.object();
         config.add("message", Blocker.DEFAULT_MSG);
+        config.add("cacheMaxTime", Blocker.DEFAULT_CACHE_MAX_TIME);
+
         try {
             if(!configFile.exists()) {
                 configFile.getParentFile().mkdirs();
                 configFile.createNewFile();
             }
-            config.writeTo(new FileWriter(configFile));
+            FileWriter writer = new FileWriter(configFile);
+            config.writeTo(writer, WriterConfig.PRETTY_PRINT);
+            writer.close();
         } catch(Exception ex) {
             ex.printStackTrace();
         }
@@ -40,7 +43,8 @@ public class BlockerManager {
             config = createConfig(configFile);
         }
 
-        MESSAGE = config.getString("message", Blocker.DEFAULT_MSG);
+        Blocker.MESSAGE = Blocker.translateChatColors(config.getString("message", Blocker.DEFAULT_MSG));
+        Blocker.CACHE_MAX_TIME = config.getInt("cacheMaxTime", Blocker.DEFAULT_CACHE_MAX_TIME);
     }
 
     private static boolean check(UUID uuid) throws IOException {
@@ -50,7 +54,7 @@ public class BlockerManager {
         JsonObject data = Json.parse(reader).asObject();
 
         boolean blocked = data.getBoolean("exists", false);
-        if(blocked) Blocker.addToCache(uuid);
+        Blocker.setBlocked(uuid, blocked);
         return blocked;
     }
 

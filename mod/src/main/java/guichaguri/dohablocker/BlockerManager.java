@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.UUID;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,18 +37,22 @@ public class BlockerManager {
 
         if(config == null) config = new Config();
 
-        Blocker.MESSAGE = config.message;
+        Blocker.MESSAGE = Blocker.translateChatColors(config.message);
         Blocker.CACHE_MAX_TIME = config.cacheMaxTime;
 
+        FileWriter writer = null;
         try {
             if(!configFile.exists()) {
                 configFile.getParentFile().mkdirs();
                 configFile.createNewFile();
             }
 
-            FileUtils.writeStringToFile(configFile, GSON.toJson(config));
+            writer = new FileWriter(configFile);
+            GSON.toJson(config, writer);
         } catch(Exception ex) {
             ex.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(writer);
         }
     }
 
@@ -58,7 +62,7 @@ public class BlockerManager {
         InputStreamReader reader = new InputStreamReader(url.openStream());
         Check check = GSON.fromJson(reader, Check.class);
 
-        if(check.exists) Blocker.addToCache(uuid);
+        Blocker.setBlocked(uuid, check.exists);
         return check.exists;
     }
 
@@ -73,12 +77,12 @@ public class BlockerManager {
     }
 
     private static class Config {
-        public String message = Blocker.DEFAULT_MSG;
-        public int cacheMaxTime = Blocker.DEFAULT_CACHE_MAX_TIME;
+        String message = Blocker.DEFAULT_MSG;
+        int cacheMaxTime = Blocker.DEFAULT_CACHE_MAX_TIME;
     }
 
     private static class Check {
-        public boolean exists = false;
+        boolean exists = false;
     }
 
 }
