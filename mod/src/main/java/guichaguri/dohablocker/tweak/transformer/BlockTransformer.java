@@ -13,13 +13,14 @@ import org.objectweb.asm.tree.*;
 public class BlockTransformer implements IClassTransformer {
 
     private final String authClassNameDeobf = "net.minecraft.server.network.NetHandlerLoginServer";
-    private final String authClassNameObf = "TODO";
+    private final String authClassNameObf = "mk";
 
     private final String loginMethodNameDeobf = "processLoginStart";
-    private final String loginMethodNameObf = "TODO";
+    private final String loginMethodNameSrg = "func_147316_a";
+    private final String loginMethodNameObf = "a";
 
     private final String loginMethodDescDeobf = "(Lnet/minecraft/network/login/client/CPacketLoginStart;)V";
-    private final String loginMethodDescObf = "TODO";
+    private final String loginMethodDescObf = "(Ljy;)V";
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
@@ -33,8 +34,12 @@ public class BlockTransformer implements IClassTransformer {
         boolean patched = false;
 
         for(MethodNode method : clazz.methods) {
-            if(!method.name.equals(loginMethodNameObf) && !method.name.equals(loginMethodNameDeobf)) continue;
-            if(!method.desc.equals(loginMethodDescObf) && !method.desc.equals(loginMethodDescDeobf)) continue;
+            String mn = method.name;
+            if(!mn.equals(loginMethodNameSrg)) {
+                if(!mn.equals(loginMethodNameObf) && !mn.equals(loginMethodNameDeobf)) continue;
+                String md = method.desc;
+                if(!md.equals(loginMethodDescObf) && !md.equals(loginMethodDescDeobf)) continue;
+            }
 
             for(int i = 0; i < method.instructions.size(); i++) {
                 AbstractInsnNode node = method.instructions.get(i);
@@ -48,15 +53,15 @@ public class BlockTransformer implements IClassTransformer {
 
         if(!patched) return bytes;
 
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter writer = new ClassWriter(0);
         clazz.accept(writer);
         return writer.toByteArray();
     }
 
     private void patchMethod(MethodNode method, LabelNode firstLabel) {
         String desc = "(";
-        desc += method.localVariables.get(0).desc;
-        desc += method.localVariables.get(1).desc;
+        desc += method.localVariables.get(0).desc; // NetHandlerLoginServer
+        desc += method.localVariables.get(1).desc; // CPacketLoginStart
         desc += ")Z";
 
         InsnList list = new InsnList();

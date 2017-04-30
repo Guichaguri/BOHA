@@ -1,5 +1,6 @@
 package guichaguri.dohablocker.bungee;
 
+import guichaguri.dohablocker.Blocker;
 import guichaguri.dohablocker.BlockerManager;
 import java.io.File;
 import net.md_5.bungee.api.event.PreLoginEvent;
@@ -24,7 +25,7 @@ public class BlockerBungee extends Plugin implements Listener {
     @EventHandler
     public void login(PreLoginEvent event) {
         if(BlockerManager.isBlocked(event.getConnection().getUniqueId())) {
-            event.setCancelReason(BlockerManager.MESSAGE);
+            event.setCancelReason(Blocker.MESSAGE);
             event.setCancelled(true);
         }
     }

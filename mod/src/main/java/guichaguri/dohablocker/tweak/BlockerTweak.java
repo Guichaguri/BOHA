@@ -1,6 +1,5 @@
 package guichaguri.dohablocker.tweak;
 
-import guichaguri.dohablocker.BlockerManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,22 +26,15 @@ public class BlockerTweak implements ITweaker {
             this.args.add(assetsDir.getAbsolutePath());
         }
 
-        File configDir;
-
         if(gameDir != null) {
             this.args.add("--gameDir");
             this.args.add(gameDir.getAbsolutePath());
-
-            configDir = new File(gameDir, "config");
-        } else {
-            configDir = new File("config");
         }
-
-        BlockerManager.loadConfig(new File(configDir, "doha-blocker.json"));
     }
 
     @Override
     public void injectIntoClassLoader(LaunchClassLoader loader) {
+        loader.addTransformerExclusion("guichaguri.dohablocker.tweak");
         loader.registerTransformer("guichaguri.dohablocker.tweak.transformer.BlockTransformer");
     }
 

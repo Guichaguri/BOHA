@@ -36,7 +36,7 @@ public class BlockerSponge {
     @Listener
     public void login(Auth event) {
         if(BlockerManager.isBlocked(event.getProfile().getUniqueId())) {
-            event.setMessage(Text.builder(BlockerManager.MESSAGE).build());
+            event.setMessage(Text.of(Blocker.MESSAGE));
             event.setCancelled(true);
         }
     }

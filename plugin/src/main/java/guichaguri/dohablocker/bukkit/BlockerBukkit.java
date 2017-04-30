@@ -1,5 +1,6 @@
 package guichaguri.dohablocker.bukkit;
 
+import guichaguri.dohablocker.Blocker;
 import guichaguri.dohablocker.BlockerManager;
 import java.io.File;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,7 @@ public class BlockerBukkit extends JavaPlugin implements Listener {
     @EventHandler
     public void login(AsyncPlayerPreLoginEvent event) {
         if(BlockerManager.isBlocked(event.getUniqueId())) {
-            event.disallow(Result.KICK_OTHER, BlockerManager.MESSAGE);
+            event.disallow(Result.KICK_OTHER, Blocker.MESSAGE);
         }
     }
 }
