@@ -1,6 +1,6 @@
-package guichaguri.dohablocker.tweak.transformer;
+package guichaguri.boha.tweak.transformer;
 
-import guichaguri.dohablocker.BlockerManager;
+import guichaguri.boha.BlockerManager;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -68,7 +68,7 @@ public class BlockTransformer implements IClassTransformer {
         list.add(new LabelNode());
         list.add(new VarInsnNode(Opcodes.ALOAD, 0)); // this
         list.add(new VarInsnNode(Opcodes.ALOAD, 1)); // packet
-        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "guichaguri/dohablocker/vanilla/BlockerHooks", "isBlocked", desc, false));
+        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "guichaguri/boha/vanilla/BlockerHooks", "isBlocked", desc, false));
         list.add(new JumpInsnNode(Opcodes.IFEQ, firstLabel));
         list.add(new InsnNode(Opcodes.RETURN));
 

@@ -11,8 +11,8 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.tweaker-server'
 
 version = ver
-group = "guichaguri.doha-blocker"
-archivesBaseName = "DOHA-Blocker-Mod"
+group = "guichaguri.boha"
+archivesBaseName = "BOHA-Mod"
 
 sourceCompatibility = targetCompatibility = "1.6"
 compileJava {
@@ -22,7 +22,7 @@ compileJava {
 minecraft {
     version = "1.11.2"
     runDir = "run"
-    tweakClass = "guichaguri.dohablocker.tweak.BlockerTweak"
+    tweakClass = "guichaguri.boha.tweak.BlockerTweak"
     mappings = "snapshot_20161220"
     makeObfSourceJar = false
 
@@ -47,7 +47,7 @@ jar {
     manifest {
         attributes  'TweakClass': project.minecraft.tweakClass,
                     'TweakOrder': '1500',
-                    'TweakName': 'DOHA-Blocker',
+                    'TweakName': 'BOHA',
                     'TweakAuthor': 'Guichaguri',
                     'TweakVersion': ver
     }

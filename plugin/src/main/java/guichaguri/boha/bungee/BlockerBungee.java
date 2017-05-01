@@ -1,7 +1,7 @@
-package guichaguri.dohablocker.bungee;
+package guichaguri.boha.bungee;
 
-import guichaguri.dohablocker.Blocker;
-import guichaguri.dohablocker.BlockerManager;
+import guichaguri.boha.Blocker;
+import guichaguri.boha.BlockerManager;
 import java.io.File;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;

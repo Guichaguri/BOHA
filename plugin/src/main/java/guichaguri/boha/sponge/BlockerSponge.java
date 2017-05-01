@@ -1,8 +1,8 @@
-package guichaguri.dohablocker.sponge;
+package guichaguri.boha.sponge;
 
 import com.google.inject.Inject;
-import guichaguri.dohablocker.Blocker;
-import guichaguri.dohablocker.BlockerManager;
+import guichaguri.boha.Blocker;
+import guichaguri.boha.BlockerManager;
 import java.io.File;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
@@ -15,8 +15,8 @@ import org.spongepowered.api.text.Text;
  * @author Guilherme Chaguri
  */
 @Plugin(
-        id = "doha-blocker",
-        name = "DOHA-Blocker",
+        id = "boha",
+        name = "BOHA",
         version = Blocker.VERSION,
         authors = "Guichaguri",
         description = "Blocks connections from hacked accounts"

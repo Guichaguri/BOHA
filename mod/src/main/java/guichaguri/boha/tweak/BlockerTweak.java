@@ -1,4 +1,4 @@
-package guichaguri.dohablocker.tweak;
+package guichaguri.boha.tweak;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,8 +34,8 @@ public class BlockerTweak implements ITweaker {
 
     @Override
     public void injectIntoClassLoader(LaunchClassLoader loader) {
-        loader.addTransformerExclusion("guichaguri.dohablocker.tweak");
-        loader.registerTransformer("guichaguri.dohablocker.tweak.transformer.BlockTransformer");
+        loader.addTransformerExclusion("guichaguri.boha.tweak");
+        loader.registerTransformer("guichaguri.boha.tweak.transformer.BlockTransformer");
     }
 
     @Override

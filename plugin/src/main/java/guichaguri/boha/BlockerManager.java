@@ -1,4 +1,4 @@
-package guichaguri.dohablocker;
+package guichaguri.boha;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;

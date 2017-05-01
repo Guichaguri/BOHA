@@ -18,7 +18,7 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 
-group 'guichaguri.doha-blocker'
+group 'guichaguri.boha'
 version ver
 
 sourceCompatibility = targetCompatibility = "1.6"
@@ -59,7 +59,7 @@ dependencies {
     compile 'com.eclipsesource.minimal-json:minimal-json:0.9.4'
 }
 
-def processYaml(yaml, file) {
+def processYaml(Yaml yaml, File file) {
     println("Updating version from " + file.name)
 
     def data = (Map)yaml.load(file.text)
@@ -78,7 +78,7 @@ processResources {
 }
 
 shadowJar {
-    baseName = 'DOHA-Blocker-Plugin'
+    baseName = 'BOHA-Plugin'
     classifier = null
 
     dependencies {
@@ -86,5 +86,5 @@ shadowJar {
         include dependency('com.eclipsesource.minimal-json:minimal-json:0.9.4')
     }
 
-    relocate 'com.eclipsesource.json', 'guichaguri.dohablocker.json'
+    relocate 'com.eclipsesource.json', 'guichaguri.boha.json'
 }

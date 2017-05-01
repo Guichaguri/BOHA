@@ -1,4 +1,4 @@
-group 'guichaguri.dohablocker'
+group 'guichaguri.boha'
 version ver
 
 apply plugin: 'java'

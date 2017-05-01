@@ -1,7 +1,7 @@
-package guichaguri.dohablocker.vanilla;
+package guichaguri.boha.vanilla;
 
-import guichaguri.dohablocker.Blocker;
-import guichaguri.dohablocker.BlockerManager;
+import guichaguri.boha.Blocker;
+import guichaguri.boha.BlockerManager;
 import java.io.File;
 import net.minecraft.network.login.client.CPacketLoginStart;
 import net.minecraft.server.network.NetHandlerLoginServer;
@@ -12,7 +12,7 @@ import net.minecraft.server.network.NetHandlerLoginServer;
 public class BlockerHooks {
 
     static {
-        BlockerManager.loadConfig(new File("config", "doha-blocker.json"));
+        BlockerManager.loadConfig(new File("config", "boha.json"));
     }
 
     /**

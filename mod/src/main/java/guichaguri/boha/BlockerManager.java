@@ -1,4 +1,4 @@
-package guichaguri.dohablocker;
+package guichaguri.boha;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 public class BlockerManager {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    public static final Logger LOG = LogManager.getLogger("DOHA-Blocker");
+    public static final Logger LOG = LogManager.getLogger("BOHA");
 
     public static void loadConfig(File configFile) {
         LOG.debug("Loading config file...");

@@ -1,7 +1,7 @@
-package guichaguri.dohablocker.bukkit;
+package guichaguri.boha.bukkit;
 
-import guichaguri.dohablocker.Blocker;
-import guichaguri.dohablocker.BlockerManager;
+import guichaguri.boha.Blocker;
+import guichaguri.boha.BlockerManager;
 import java.io.File;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

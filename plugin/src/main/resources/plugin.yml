@@ -1,4 +1,4 @@
-name: DOHA-Blocker
-main: guichaguri.dohablocker.bukkit.BlockerBukkit
-version: 1.0.2
+name: BOHA
+main: guichaguri.boha.bukkit.BlockerBukkit
+version: 1.0.3
 author: Guichaguri
