@@ -19,12 +19,12 @@ public class BlockerBungee extends Plugin implements Listener {
         getProxy().getPluginManager().registerListener(this, this);
 
         // Loads the config
-        BlockerManager.loadConfig(new File(getDataFolder(), "config.json"));
+        BlockerManager.loadConfig(new File(getDataFolder(), "config.json"), new File(getDataFolder(), "doha-database.json"));
     }
 
     @EventHandler
     public void login(PreLoginEvent event) {
-        if(BlockerManager.isBlocked(event.getConnection().getUniqueId())) {
+        if(Blocker.isBlocked(event.getConnection().getUniqueId())) {
             event.setCancelReason(Blocker.MESSAGE);
             event.setCancelled(true);
         }

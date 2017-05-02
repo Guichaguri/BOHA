@@ -30,12 +30,12 @@ public class BlockerSponge {
     @Listener
     public void init(GameStartingServerEvent event) {
         // Loads the config
-        BlockerManager.loadConfig(new File(configDir, "config.json"));
+        BlockerManager.loadConfig(new File(configDir, "config.json"), new File(configDir, "doha-database.json"));
     }
 
     @Listener
     public void login(Auth event) {
-        if(BlockerManager.isBlocked(event.getProfile().getUniqueId())) {
+        if(Blocker.isBlocked(event.getProfile().getUniqueId())) {
             event.setMessage(Text.of(Blocker.MESSAGE));
             event.setCancelled(true);
         }

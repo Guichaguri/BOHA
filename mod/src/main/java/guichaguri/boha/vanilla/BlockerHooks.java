@@ -12,14 +12,14 @@ import net.minecraft.server.network.NetHandlerLoginServer;
 public class BlockerHooks {
 
     static {
-        BlockerManager.loadConfig(new File("config", "boha.json"));
+        BlockerManager.loadConfig(new File("config", "boha.json"), new File("data", "doha-database.json"));
     }
 
     /**
      * Called from {@link NetHandlerLoginServer#processLoginStart(CPacketLoginStart)}
      */
     public static boolean isBlocked(NetHandlerLoginServer login, CPacketLoginStart packet) {
-        boolean blocked = BlockerManager.isBlocked(packet.getProfile().getId());
+        boolean blocked = Blocker.isBlocked(packet.getProfile().getId());
         if(blocked) login.closeConnection(Blocker.MESSAGE);
         return blocked;
     }

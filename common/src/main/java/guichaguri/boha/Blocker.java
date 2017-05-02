@@ -1,9 +1,8 @@
 package guichaguri.boha;
 
+import guichaguri.boha.logic.IChecker;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -11,38 +10,31 @@ import java.util.UUID;
  */
 public class Blocker {
 
-    public static final String VERSION = "1.0.3";
+    public static final String VERSION = "1.0.4";
+    public static final int CONFIG_VERSION = 2;
 
     public static final String DEFAULT_MSG = "&cYou are using a hacked account.";
-    public static final int DEFAULT_CACHE_MAX_TIME = 3600;
-    public static final String URL_BASE = "https://doha.blueslime.fr/api/check/";
+    public static final int DEFAULT_CACHE_TIMEOUT = 3600;
+    public static final int DEFAULT_DB_INTERVAL = 24;
+
+    public static final String API_URL_BASE = "https://doha.blueslime.fr/api/check/";
+    public static final String DB_URL = "https://raw.githubusercontent.com/IamBlueSlime/DOHA/master/db.json";
 
     public static String MESSAGE = DEFAULT_MSG;
-    public static int CACHE_MAX_TIME = DEFAULT_CACHE_MAX_TIME;
 
-    private static final Map<UUID, Boolean> CACHE = new HashMap<UUID, Boolean>();
-    private static long CACHE_TIME = 0;
+    public static IChecker CHECKER = null;
 
     public static URL getUrl(UUID uuid) throws MalformedURLException {
-        return new URL(URL_BASE + uuid.toString());
+        return new URL(API_URL_BASE + uuid.toString());
     }
 
-    public static void setBlocked(UUID uuid, boolean blocked) {
-        CACHE.put(uuid, blocked);
-    }
-
-    public static boolean isBlockedCache(UUID uuid) {
-        if(CACHE_MAX_TIME == 0) return false;
-
-        long currentTime = System.currentTimeMillis();
-        if(currentTime > CACHE_TIME + (CACHE_MAX_TIME * 1000)) {
-            CACHE.clear();
-            CACHE_TIME = currentTime;
+    public static boolean isBlocked(UUID uuid) {
+        try {
+            return CHECKER != null && CHECKER.isBlocked(uuid);
+        } catch(Exception ex) {
+            ex.printStackTrace();
             return false;
         }
-
-        Boolean blocked = CACHE.get(uuid);
-        return blocked != null && blocked;
     }
 
     public static String translateChatColors(String str) {

@@ -3,13 +3,13 @@ package guichaguri.boha;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.WriterConfig;
+import guichaguri.boha.logic.APIChecker;
+import guichaguri.boha.logic.DatabaseChecker;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.UUID;
 
 /**
  * @author Guilherme Chaguri
@@ -18,53 +18,72 @@ public class BlockerManager {
 
     private static JsonObject createConfig(File configFile) {
         JsonObject config = Json.object();
+        config.add("configVersion", Blocker.CONFIG_VERSION);
         config.add("message", Blocker.DEFAULT_MSG);
-        config.add("cacheMaxTime", Blocker.DEFAULT_CACHE_MAX_TIME);
 
+        JsonObject cache = Json.object();
+        cache.add("enabled", true);
+        cache.add("timeout", Blocker.DEFAULT_CACHE_TIMEOUT);
+        config.add("cache", cache);
+
+        JsonObject database = Json.object();
+        database.add("enabled", true);
+        database.add("interval", Blocker.DEFAULT_DB_INTERVAL);
+        config.add("database", database);
+
+        FileWriter writer = null;
         try {
-            if(!configFile.exists()) {
-                configFile.getParentFile().mkdirs();
-                configFile.createNewFile();
-            }
-            FileWriter writer = new FileWriter(configFile);
+            configFile.getParentFile().mkdirs();
+            writer = new FileWriter(configFile);
             config.writeTo(writer, WriterConfig.PRETTY_PRINT);
-            writer.close();
         } catch(Exception ex) {
             ex.printStackTrace();
+        } finally {
+            BlockerManager.closeQuietly(writer);
         }
         return config;
     }
 
-    public static void loadConfig(File configFile) {
+    public static void loadConfig(File configFile, File databaseFile) {
         JsonObject config;
+
+        FileReader reader = null;
         try {
-            config = Json.parse(new FileReader(configFile)).asObject();
+            reader = new FileReader(configFile);
+            config = Json.parse(reader).asObject();
+
+            if(config.getInt("configVersion", -1) != Blocker.CONFIG_VERSION) {
+                config = createConfig(configFile);
+            }
         } catch(Exception ex) {
             config = createConfig(configFile);
+        } finally {
+            BlockerManager.closeQuietly(reader);
         }
 
         Blocker.MESSAGE = Blocker.translateChatColors(config.getString("message", Blocker.DEFAULT_MSG));
-        Blocker.CACHE_MAX_TIME = config.getInt("cacheMaxTime", Blocker.DEFAULT_CACHE_MAX_TIME);
+
+        JsonObject cache = config.get("cache").asObject();
+        boolean cacheEnabled = cache.getBoolean("enabled", true);
+        int cacheTimeout = cache.getInt("timeout", Blocker.DEFAULT_CACHE_TIMEOUT);
+
+        JsonObject database = config.get("database").asObject();
+        boolean databaseEnabled = database.getBoolean("enabled", true);
+        int databaseInterval = database.getInt("interval", Blocker.DEFAULT_DB_INTERVAL);
+
+        Blocker.CHECKER = new APIChecker(cacheEnabled, cacheTimeout);
+
+        if(databaseEnabled) {
+            DatabaseChecker checker = new DatabaseChecker(databaseFile, databaseInterval);
+            if(checker.hasData()) Blocker.CHECKER = checker;
+        }
     }
 
-    private static boolean check(UUID uuid) throws IOException {
-        URL url = Blocker.getUrl(uuid);
-
-        InputStreamReader reader = new InputStreamReader(url.openStream());
-        JsonObject data = Json.parse(reader).asObject();
-
-        boolean blocked = data.getBoolean("exists", false);
-        Blocker.setBlocked(uuid, blocked);
-        return blocked;
-    }
-
-    public static boolean isBlocked(UUID uuid) {
-        if(Blocker.isBlockedCache(uuid)) return true;
-
+    public static void closeQuietly(Closeable c) {
         try {
-            return check(uuid);
-        } catch(Exception ex) {
-            return false;
+            if(c != null) c.close();
+        } catch(IOException e) {
+            // Quietly
         }
     }
 

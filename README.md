@@ -23,12 +23,12 @@ For both the mod and the plugin, the configuration should look like this:
 ```json
 {
   "message": "&cYou are using a hacked account.",
-  "cacheMaxTime": 3600
+  "cacheTimeout": 3600
 }
 ```
 `message` is the message which will be used for kicking the hacked account. You can use formatting codes.
 
-`cacheMaxTime` is the interval in seconds which the cache will be cleared. Set it to 0 to disable caching.
+`cacheTimeout` is the interval in seconds which the cache will be cleared. Set it to 0 to disable caching.
 
 ## Credits
 * [IamBlueSlime](https://github.com/IamBlueSlime) for DOHA

@@ -20,12 +20,12 @@ public class BlockerBukkit extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
 
         // Loads the config
-        BlockerManager.loadConfig(new File(getDataFolder(), "config.json"));
+        BlockerManager.loadConfig(new File(getDataFolder(), "config.json"), new File(getDataFolder(), "doha-database.json"));
     }
 
     @EventHandler
     public void login(AsyncPlayerPreLoginEvent event) {
-        if(BlockerManager.isBlocked(event.getUniqueId())) {
+        if(Blocker.isBlocked(event.getUniqueId())) {
             event.disallow(Result.KICK_OTHER, Blocker.MESSAGE);
         }
     }
