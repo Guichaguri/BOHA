@@ -15,12 +15,12 @@ public class BlockTransformer implements IClassTransformer {
     private final String authClassNameDeobf = "net.minecraft.server.network.NetHandlerLoginServer";
     private final String authClassNameObf = "mk";
 
-    private final String loginMethodNameDeobf = "processLoginStart";
-    private final String loginMethodNameSrg = "func_147316_a";
-    private final String loginMethodNameObf = "a";
+    private final String gameProfileDesc = "Lcom/mojang/authlib/GameProfile;";
 
-    private final String loginMethodDescDeobf = "(Lnet/minecraft/network/login/client/CPacketLoginStart;)V";
-    private final String loginMethodDescObf = "(Ljy;)V";
+    private final String acceptMethodNameDeobf = "tryAcceptPlayer";
+    private final String acceptMethodNameSrg = "func_147326_c";
+    private final String acceptMethodNameObf = "b";
+    private final String acceptMethodDesc = "()V";
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
@@ -35,16 +35,15 @@ public class BlockTransformer implements IClassTransformer {
 
         for(MethodNode method : clazz.methods) {
             String mn = method.name;
-            if(!mn.equals(loginMethodNameSrg)) {
-                if(!mn.equals(loginMethodNameObf) && !mn.equals(loginMethodNameDeobf)) continue;
-                String md = method.desc;
-                if(!md.equals(loginMethodDescObf) && !md.equals(loginMethodDescDeobf)) continue;
+            if(!mn.equals(acceptMethodNameSrg)) {
+                if(!mn.equals(acceptMethodNameObf) && !mn.equals(acceptMethodNameDeobf)) continue;
+                if(!method.desc.equals(acceptMethodDesc)) continue;
             }
 
             for(int i = 0; i < method.instructions.size(); i++) {
                 AbstractInsnNode node = method.instructions.get(i);
                 if(node instanceof LabelNode) {
-                    patchMethod(method, (LabelNode)node);
+                    patchMethod(clazz, method, (LabelNode)node);
                     patched = true;
                     break;
                 }
@@ -58,16 +57,27 @@ public class BlockTransformer implements IClassTransformer {
         return writer.toByteArray();
     }
 
-    private void patchMethod(MethodNode method, LabelNode firstLabel) {
+    private void patchMethod(ClassNode clazz, MethodNode method, LabelNode firstLabel) {
+        FieldNode gameProfile = null;
+        for(FieldNode field : clazz.fields) {
+            if(field.desc.equals(gameProfileDesc)) {
+                gameProfile = field;
+                break;
+            }
+        }
+
+        if(gameProfile == null) return;
+
         String desc = "(";
-        desc += method.localVariables.get(0).desc; // NetHandlerLoginServer
-        desc += method.localVariables.get(1).desc; // CPacketLoginStart
+        desc += "L" + clazz.name + ";"; // NetHandlerLoginServer
+        desc += gameProfile.desc; // GameProfile
         desc += ")Z";
 
         InsnList list = new InsnList();
         list.add(new LabelNode());
         list.add(new VarInsnNode(Opcodes.ALOAD, 0)); // this
-        list.add(new VarInsnNode(Opcodes.ALOAD, 1)); // packet
+        list.add(new VarInsnNode(Opcodes.ALOAD, 0)); // this
+        list.add(new FieldInsnNode(Opcodes.GETFIELD, clazz.name, gameProfile.name, gameProfile.desc));
         list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "guichaguri/boha/vanilla/BlockerHooks", "isBlocked", desc, false));
         list.add(new JumpInsnNode(Opcodes.IFEQ, firstLabel));
         list.add(new InsnNode(Opcodes.RETURN));

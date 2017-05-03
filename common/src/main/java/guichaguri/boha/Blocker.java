@@ -29,12 +29,7 @@ public class Blocker {
     }
 
     public static boolean isBlocked(UUID uuid) {
-        try {
-            return CHECKER != null && CHECKER.isBlocked(uuid);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
+        return CHECKER != null && CHECKER.isBlocked(uuid);
     }
 
     public static String translateChatColors(String str) {

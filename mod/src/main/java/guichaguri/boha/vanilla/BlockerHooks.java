@@ -1,9 +1,10 @@
 package guichaguri.boha.vanilla;
 
+import com.mojang.authlib.GameProfile;
 import guichaguri.boha.Blocker;
 import guichaguri.boha.BlockerManager;
 import java.io.File;
-import net.minecraft.network.login.client.CPacketLoginStart;
+import java.util.UUID;
 import net.minecraft.server.network.NetHandlerLoginServer;
 
 /**
@@ -16,12 +17,19 @@ public class BlockerHooks {
     }
 
     /**
-     * Called from {@link NetHandlerLoginServer#processLoginStart(CPacketLoginStart)}
+     * Called from {@link NetHandlerLoginServer#tryAcceptPlayer()}
      */
-    public static boolean isBlocked(NetHandlerLoginServer login, CPacketLoginStart packet) {
-        boolean blocked = Blocker.isBlocked(packet.getProfile().getId());
-        if(blocked) login.closeConnection(Blocker.MESSAGE);
-        return blocked;
+    public static boolean isBlocked(NetHandlerLoginServer login, GameProfile profile) {
+        if(profile == null) return false;
+
+        UUID uuid = profile.getId();
+        if(uuid == null) return false;
+
+        if(Blocker.isBlocked(uuid)) {
+            login.closeConnection(Blocker.MESSAGE);
+            return true;
+        }
+        return false;
     }
 
 }
