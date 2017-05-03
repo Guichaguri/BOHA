@@ -23,12 +23,25 @@ For both the mod and the plugin, the configuration should look like this:
 ```json
 {
   "message": "&cYou are using a hacked account.",
-  "cacheTimeout": 3600
+  "cache": {
+    "enabled": true,
+    "timeout": 3600
+  },
+  "database": {
+    "enabled": true,
+    "interval": 24
+  }
 }
 ```
-`message` is the message which will be used for kicking the hacked account. You can use formatting codes.
+* `message` is the message which will be used for kicking the hacked account. You can use formatting codes.
+* `cache` - Cache requests to the DOHA API
+  * `enabled` is whether caching will be enabled.
+  * `timeout` is the interval in seconds which the cache will be cleared.
+* `database` - The whole DOHA database will be downloaded locally
+  * `enabled` is whether the database will be downloaded and used
+  * `interval` is the minimum time in hours to refresh the database
 
-`cacheTimeout` is the interval in seconds which the cache will be cleared. Set it to 0 to disable caching.
+Using database is recommended because it will download the whole DOHA database which not only makes the verification faster, but also prevents from breaking the DOHA API server.
 
 ## Credits
 * [IamBlueSlime](https://github.com/IamBlueSlime) for DOHA
