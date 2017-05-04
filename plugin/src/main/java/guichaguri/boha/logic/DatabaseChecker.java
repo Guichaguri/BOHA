@@ -36,7 +36,7 @@ public class DatabaseChecker extends ArrayChecker {
         JsonArray players = json.get("players").asArray();
 
         UUID[] db = new UUID[players.size()];
-        for(int i = 0; i < json.size(); i++) {
+        for(int i = 0; i < players.size(); i++) {
             db[i] = UUID.fromString(players.get(i).asString());
         }
 

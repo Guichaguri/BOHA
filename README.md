@@ -41,7 +41,7 @@ For both the mod and the plugin, the configuration should look like this:
   * `enabled` is whether the database will be downloaded and used
   * `interval` is the minimum time in hours to refresh the database
 
-Using database is recommended because it not only makes the verification faster, but also prevents hacked accounts from joining your server when the DOHA API server is down.
+Using database is recommended because it not only makes the verification faster, but also prevents hacked accounts from joining your server when the DOHA API is down.
 
 ## Credits
 * [IamBlueSlime](https://github.com/IamBlueSlime) for DOHA
