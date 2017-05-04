@@ -10,11 +10,11 @@ Note: If you're using SpongeForge, please, use the plugin instead of the mod. It
 
 ## Installation
 ### Bukkit/BungeeCord
-Drop the plugin in the `plugins` folder
+Put the plugin file in the `plugins` folder
 ### Forge/LiteLoader/Sponge
-Drop the mod/plugin in the `mods` folder.
+Put the mod/plugin file in the `mods` folder.
 ### Vanilla
-1. Add the mod, LaunchWrapper and ASM to the classpath.
+1. Add the mod, [LegacyLauncher](https://github.com/Mojang/LegacyLauncher) and [ASM](http://asm.ow2.org/) to the classpath.
 2. Set the main class to `net.minecraft.launchwrapper.Launch`
 3. Add `--tweakClass guichaguri.boha.tweak.BlockerTweak` to the start command
 
@@ -41,7 +41,7 @@ For both the mod and the plugin, the configuration should look like this:
   * `enabled` is whether the database will be downloaded and used
   * `interval` is the minimum time in hours to refresh the database
 
-Using database is recommended because it will download the whole DOHA database which not only makes the verification faster, but also prevents from breaking the DOHA API server.
+Using database is recommended because it not only makes the verification faster, but also prevents hacked accounts from joining your server when the DOHA API server is down.
 
 ## Credits
 * [IamBlueSlime](https://github.com/IamBlueSlime) for DOHA
