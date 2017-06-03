@@ -1,6 +1,5 @@
 package guichaguri.boha.tweak.transformer;
 
-import guichaguri.boha.BlockerManager;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -25,7 +24,6 @@ public class BlockTransformer implements IClassTransformer {
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
         if(!name.equals(authClassNameObf) && !name.equals(authClassNameDeobf)) return bytes;
-        BlockerManager.LOG.info("Patching " + transformedName + "... (" + name + ")");
 
         ClassNode clazz = new ClassNode();
         ClassReader reader = new ClassReader(bytes);

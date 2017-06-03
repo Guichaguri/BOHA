@@ -27,7 +27,7 @@ compileJava {
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
     maven {
         name = 'sponge'
         url = 'http://repo.spongepowered.org/maven'
@@ -56,7 +56,7 @@ dependencies {
     compile 'net.md-5:bungeecord-api:1.10-SNAPSHOT'
 
     // Json
-    compile 'com.eclipsesource.minimal-json:minimal-json:0.9.4'
+    compile 'com.google.code.gson:gson:2.8.1'
 }
 
 def processYaml(Yaml yaml, File file) {
@@ -83,8 +83,5 @@ shadowJar {
 
     dependencies {
         include project(':common')
-        include dependency('com.eclipsesource.minimal-json:minimal-json:0.9.4')
     }
-
-    relocate 'com.eclipsesource.json', 'guichaguri.boha.json'
 }

@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import guichaguri.boha.Blocker;
-import guichaguri.boha.BlockerManager;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,25 +13,44 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.UUID;
-import org.apache.commons.io.IOUtils;
 
 /**
  * @author Guilherme Chaguri
  */
-public class DatabaseChecker extends ArrayChecker {
+public class DohaDatabaseChecker implements IChecker {
+
+    private final String dbUrl = "https://raw.githubusercontent.com/IamBlueSlime/DOHA/master/db.json";
 
     private final JsonParser parser = new JsonParser();
     private final File cacheFile;
 
-    public DatabaseChecker(File cacheFile, int refreshInterval) {
-        super(refreshInterval);
+    private UUID[] database;
+
+    private final boolean refreshEnabled;
+    private final long refreshInterval;
+    private long refreshTime = 0;
+
+    public DohaDatabaseChecker(File cacheFile, int refreshInterval) {
+        this.refreshEnabled = refreshInterval > 0;
+        this.refreshInterval = refreshInterval * 1000L * 3600L;
         this.cacheFile = cacheFile;
         this.database = loadDatabaseFile();
     }
 
     @Override
-    public UUID[] refresh() {
-        return downloadDatabase();
+    public boolean isBlocked(UUID uuid) {
+        if(refreshEnabled) {
+            long now = System.currentTimeMillis();
+            if(now - refreshTime > refreshInterval) {
+                UUID[] db = downloadDatabase();
+                if(db != null) {
+                    database = db;
+                    refreshTime = now;
+                }
+            }
+        }
+
+        return Arrays.binarySearch(database, uuid) >= 0;
     }
 
     private UUID[] fromJson(JsonObject obj) {
@@ -67,26 +85,25 @@ public class DatabaseChecker extends ArrayChecker {
             db = downloadDatabase();
             refreshTime = System.currentTimeMillis();
         } finally {
-            IOUtils.closeQuietly(reader);
+            Blocker.closeQuietly(reader);
         }
 
         return db;
     }
 
     private UUID[] downloadDatabase() {
-        BlockerManager.LOG.info("Downloading DOHA database....");
         JsonObject object;
 
         Reader reader = null;
         try {
             // Download the database and parse it
-            URL url = new URL(Blocker.DB_URL);
+            URL url = new URL(dbUrl);
             reader = new InputStreamReader(url.openStream());
             object = parser.parse(reader).getAsJsonObject();
         } catch(Exception ex) {
             return null;
         } finally {
-            IOUtils.closeQuietly(reader);
+            Blocker.closeQuietly(reader);
         }
 
         object.addProperty("downloadTime", System.currentTimeMillis());
@@ -97,14 +114,12 @@ public class DatabaseChecker extends ArrayChecker {
             // Save the sorted database to a file
             cacheFile.getParentFile().mkdirs();
             writer = new FileWriter(cacheFile);
-            BlockerManager.GSON.toJson(object, writer);
+            Blocker.GSON.toJson(object, writer);
         } catch(Exception ex) {
             ex.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(writer);
+            Blocker.closeQuietly(writer);
         }
-
-        BlockerManager.LOG.info("Done.");
 
         return fromJson(object);
     }

@@ -7,16 +7,17 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.UUID;
-import org.apache.commons.io.IOUtils;
 
 /**
  * @author Guilherme Chaguri
  */
-public class APIChecker extends CachedChecker {
+public class DohaAPIChecker extends CachedChecker {
+
+    private final String apiBaseUrl = "https://doha.blueslime.fr/api/check/";
 
     private final JsonParser parser = new JsonParser();
 
-    public APIChecker(boolean cacheEnabled, int timeout) {
+    public DohaAPIChecker(boolean cacheEnabled, int timeout) {
         super(cacheEnabled, timeout);
     }
 
@@ -24,7 +25,7 @@ public class APIChecker extends CachedChecker {
     public boolean check(UUID uuid) {
         Reader reader = null;
         try {
-            URL url = Blocker.getUrl(uuid);
+            URL url = new URL(apiBaseUrl + uuid.toString());
 
             reader = new InputStreamReader(url.openStream());
             JsonObject data = parser.parse(reader).getAsJsonObject();
@@ -33,7 +34,7 @@ public class APIChecker extends CachedChecker {
         } catch(Exception ex) {
             return false;
         } finally {
-            IOUtils.closeQuietly(reader);
+            Blocker.closeQuietly(reader);
         }
     }
 
