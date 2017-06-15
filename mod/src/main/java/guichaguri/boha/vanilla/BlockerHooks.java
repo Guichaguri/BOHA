@@ -6,6 +6,7 @@ import guichaguri.boha.BlockerManager;
 import java.io.File;
 import java.util.UUID;
 import net.minecraft.server.network.NetHandlerLoginServer;
+import net.minecraft.util.text.TextComponentString;
 
 /**
  * @author Guilherme Chaguri
@@ -26,7 +27,7 @@ public class BlockerHooks {
         if(uuid == null) return false;
 
         if(Blocker.isBlocked(uuid)) {
-            login.closeConnection(Blocker.MESSAGE);
+            login.func_194026_b(new TextComponentString(Blocker.MESSAGE));
             return true;
         }
         return false;

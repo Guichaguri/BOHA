@@ -12,7 +12,7 @@ import org.objectweb.asm.tree.*;
 public class BlockTransformer implements IClassTransformer {
 
     private final String authClassNameDeobf = "net.minecraft.server.network.NetHandlerLoginServer";
-    private final String authClassNameObf = "mk";
+    private final String authClassNameObf = "pa";
 
     private final String gameProfileDesc = "Lcom/mojang/authlib/GameProfile;";
 
